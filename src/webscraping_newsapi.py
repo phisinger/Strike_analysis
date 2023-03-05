@@ -78,18 +78,15 @@ def send_email(error: int) -> None:
 
 def store_db(df: pd.DataFrame):
     # postgres connection parameters
-    host =
-    database =
-    user =
-    pw =
-    port =
-    table_name =
-    db_url = "postgresql://" + user + ":" + pw + \
-        "@" + host + ":" + port + "/" + database
+    pg_cred = json.load(open("keys/newsapi.json", "r"))
+    db_url = "postgresql://" + pg_cred["user"] + ":" + pg_cred["pw"] + \
+        "@" + pg_cred["host"] + ":" + \
+        pg_cred["port"] + "/" + pg_cred["database"]
 
     conn = create_engine(db_url)
     try:
-        df.to_sql(table_name, con=conn, if_exists="append", index=False)
+        df.to_sql(pg_cred["table_name"], con=conn,
+                  if_exists="append", index=False)
         return
     except Exception as e:
         print("one exception occured during storing to database:", e)
