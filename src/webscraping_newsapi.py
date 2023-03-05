@@ -78,7 +78,7 @@ def send_email(error: int) -> None:
 
 def store_db(df: pd.DataFrame):
     # postgres connection parameters
-    pg_cred = json.load(open("keys/newsapi.json", "r"))
+    pg_cred = json.load(open("keys/postgresql.json", "r"))
     db_url = "postgresql://" + pg_cred["user"] + ":" + pg_cred["pw"] + \
         "@" + pg_cred["host"] + ":" + \
         pg_cred["port"] + "/" + pg_cred["database"]
