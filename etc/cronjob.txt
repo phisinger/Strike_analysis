@@ -1,0 +1,3 @@
+SHELL=/bin/bash
+BASH_ENV=~/.bashrc_conda
+30 16 * * *  conda activate Strike39 && cd ~/code/Strike_analysis && python3 src/webscraping_newsapi.py && conda deactivate 
