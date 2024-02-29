@@ -2,10 +2,10 @@ import json
 import os
 from datetime import datetime, timedelta
 import requests
-from typing import List
 import math
 import pandas as pd
-from sqlalchemy import create_engine
+from postgres_conn import store_db
+from send_emails import send_email
 
 
 class Webscraping():
@@ -27,6 +27,8 @@ class Webscraping():
             "from": from_date,
             "language": "de"
         }
+
+        response_raw = requests.Response()
 
         try:
             # API request
@@ -58,38 +60,22 @@ class Webscraping():
             yield None
 
 
-def process_page(page: dict) -> pd.DataFrame:
+    def process_page(self, page: dict) -> pd.DataFrame:
 
-    articles = page["articles"]
+        articles = page["articles"]
 
-    for article_index in range(0, len(articles)):
-        articles[article_index]["source"] = articles[article_index]["source"]["name"]
+        for article_index in range(0, len(articles)):
+            articles[article_index]["source"] = articles[article_index]["source"]["name"]
 
-    df = pd.read_json(json.dumps(articles))
+        df = pd.read_json(json.dumps(articles))
 
-    return df
-
-
-def send_email(error: int) -> None:
-    # ...
-    print("email sent")
-    return
+        return df
 
 
-def store_db(df: pd.DataFrame):
-    # postgres connection parameters
-    pg_cred = json.load(open("keys/postgresql.json", "r"))
-    db_url = "postgresql://" + pg_cred["user"] + ":" + pg_cred["pw"] + \
-        "@" + pg_cred["host"] + ":" + \
-        pg_cred["port"] + "/" + pg_cred["database"]
 
-    conn = create_engine(db_url)
-    try:
-        df.to_sql(pg_cred["table_name"], con=conn,
-                  if_exists="append", index=False)
-        return
-    except Exception as e:
-        print("one exception occured during storing to database:", e)
+
+
+
 
 
 if __name__ == "__main__":
@@ -100,7 +86,7 @@ if __name__ == "__main__":
     for page in scraper.request_articles():
         if page:
             # process page
-            temp_df = process_page(page)
+            temp_df = scraper.process_page(page)
 
             # print(temp_df.head())
             articles_df = pd.concat([articles_df, temp_df])
