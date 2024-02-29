@@ -9,8 +9,8 @@ import json
 # session = boto3.Session(profile_name='your_profile_name')
 
 # Option 3: Specifying credentials directly (not recommended for security reasons)
-session = boto3.Session(aws_access_key_id='AKIAWNOEZMSCGZ7IYLCS',
-                        aws_secret_access_key='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',
+session = boto3.Session(aws_access_key_id='see json',
+                        aws_secret_access_key='see json',
                         region_name="us-east-1")
 
 
