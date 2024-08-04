@@ -164,15 +164,5 @@ def __(data_c_location):
     return
 
 
-@app.cell
-def __():
-    return
-
-
-@app.cell
-def __():
-    return
-
-
 if __name__ == "__main__":
     app.run()
